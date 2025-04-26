@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 //import { useRouter } from "next/router";
 import Link from "next/link";
+import { NextRequest, NextResponse } from "next/server";
 
 // Tipo para representar uma doação
 interface Donation {
@@ -20,7 +21,7 @@ interface User {
     avatarUrl: string;
 }
 
-export default function DonationsPage() {
+export default function DonationsPage(req:NextRequest,res:NextResponse) {
     // Informações do usuário (exemplo)
     const user: User = {
         name: "João Silva",
@@ -52,6 +53,13 @@ export default function DonationsPage() {
     const handleAddDonation = () => {
         console.log("Abrir formulário para adicionar nova doação");
     };
+    const logout =async ()=>{
+        await fetch('/api/logout',{
+            credentials:'include'
+        })
+        return window.location.reload()
+
+    }
 
     return (
         <div className="grid grid-rows-[auto_1fr_auto] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)] bg-white">
@@ -73,6 +81,7 @@ export default function DonationsPage() {
                 <div>
                     <Link href="/login">
                         <button
+                            onClick={logout}
                             className="bg-blue-700 hover:bg-blue-800 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition duration-300 ease-in-out transform hover:scale-105">
                             Sair
                         </button>

@@ -5,25 +5,31 @@ export const config = {
   matcher: [
     '/doacoes/:path*',
     '/profile/:path*',
-    '/settings/:path*'
+    '/settings/:path*',
+    '/',
+    '/login',
+    '/registrar'
+
 
   ]
 }
 export function middleware(req: NextRequest) {
   const token = req.cookies.get('auth_token')?.value;
-
-  if (!token || token === 'undefined') {
-    console.log("sem token")
-    return NextResponse.redirect(new URL('/login', req.url));
+  
+  if (token && req.url.includes('login') == true ){
+    
+    return NextResponse.redirect(new URL('/',req.nextUrl.origin))
   }
-
-  const { pathname } = req.nextUrl;
-
-  if (pathname === '/doacoes') {
-    console.log("Doacoes")
-    // Example logic for the dashboard
-    //return NextResponse.next();
-    //return NextResponse.redirect(new URL('/login', req.url));
+  if (token && req.url.includes('registrar') == true ){
+    
+    return NextResponse.redirect(new URL('/',req.nextUrl.origin))
+  }
+  if (!token || token === 'undefined' ) {
+    if (req.url.includes('login') == true ||req.url.includes('registrar') == true){
+      return NextResponse.next();
+    }
+    
+    return NextResponse.redirect(new URL('/login', req.url));
   }
 
   return NextResponse.next();
